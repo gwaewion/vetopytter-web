@@ -1,0 +1,68 @@
+<html>
+	<head>
+			<meta charset="utf-8">
+			<link rel="stylesheet" href="static/someStuff.css">
+			<script type="text/javascript" src="static/time.js"></script>
+			<script type="text/javascript" src="static/someStuff.js"></script>
+			<script type="text/javascript" src="static/overlay.js"></script>
+			<script type="text/javascript" src="static/search.js"></script>
+			<title>someStuff</title>
+	</head>
+	<body>
+		<div id="mainContainer">
+			<div id="topBar">
+				<button type="button" onclick="showExitDialog();">gtfo</button>
+				<button type="button" onclick="">settingz</button>
+				<button type="button" onclick="showAddRecordForm();">+</button>
+				<input placeholder="search" type="text" name="search" onkeypress="search();"></input>
+			</div>
+			<div id="dataContainer">
+				<div id="catalogsContainer">
+					<div id="catalogsTree">
+
+					</div>
+					<div id="timeDiv">
+						<span id="timeHolder">Time: <span id="time"></span></span>
+					</div>
+				</div>
+				<div id="recordsContainer">
+					<div id="recordsListContainer">
+				 		<div id="recordsList">
+				 			
+						</div>
+					</div>
+					<div id="recordDetailsContainer">
+				 		<div id="recordDetails">
+				 			
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="exitOverlay">
+			<div id="exitOverlayForm">
+				<div id="exitOverlayText">
+					rlly?
+				</div>
+				<div id="exitOverlayButtons">
+					<button type="button" onclick="noAskExit();">okay</button>
+					<button type="button" onclick="showExitDialog();">nope</button>
+				</div>
+			</div>
+		</div>
+		<div id="recordOverlay" onclick="">
+			<div id="recordOverlayForm">
+				<!-- <div id="recordOverlayData"> -->
+					<p>recordName: </p><input placeholder="recordName" type="text" name="recordName" id="recordNameInForm"></input>
+					<p>serverAddress: </p><input placeholder="serverAddress" type="text" name="serverAddress" id="recordServerAddressInForm"></input>
+					<p>username: </p><input placeholder="username" type="text" name="username" id="recordUsernameInForm"></input>
+					<p>password: </p><input placeholder="password" type="password" name="password" id="recordPasswordInForm"></input>
+					<p>url: </p><input placeholder="url" type="text" name="url" id="recordURLInForm"></input>
+					<p>notes: </p><textarea placeholder="some notes here" name="notes" id="recordNotesInForm"></textarea>
+					<button type="button" id="recordFormSubmit">submit</button>
+					<button type="button" onclick="showAddRecordForm();">close, blyad'</button>
+				<!-- </div> -->
+			</div>
+		</div>
+	</body>
+</html>

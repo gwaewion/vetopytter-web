@@ -1,0 +1,243 @@
+@charset "utf-8";
+
+body {
+	margin: 0;
+	font: bold 12px monospace; 
+	overflow: hidden;
+	background-color: #272822;
+}
+
+th {
+	width: 100px;
+}
+
+::-webkit-scrollbar {
+	width: 12px;
+	background-color: #272822;
+	/*border-radius: 15px;*/
+}
+
+::-webkit-scrollbar-track {
+	/*-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);*/
+	/*border-radius: 15px;*/
+	/*border-color: green;*/
+	border-width: 0px;
+	/*border-style: hidden;*/
+	background-color: #e0ffcd;
+}
+
+::-webkit-scrollbar-thumb {
+	/*border-radius: 15px;*/
+	/*-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);*/
+	background-color: #3c6426;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	/*border-radius: 15px;*/
+	/*-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);*/
+	background-color: #4c7d2f;
+}
+
+#recordNameInRow:hover {
+	cursor: pointer;
+}
+
+#recordRow {
+	margin-bottom: 5px;
+	/*display: block;*/
+	/*width: 100%;*/
+}
+
+#recordRow:hover {
+	background-color: #6db645;
+	border: 0;
+}
+
+#recordAction {
+	text-align: center;
+}
+
+#recordEdit, #recordDelete:hover {
+	cursor: pointer;
+}
+
+#mainContainer {
+	/*background-color: blue;*/
+	height: 100%;
+	width: 60%;
+	min-width: 800px;
+	margin: 0 20%;
+	box-shadow: 0 0 75px 15px rgba(0,0,0,0.7);
+}
+
+#topBar {
+	background-color: #6db645;
+	width: 100%;
+	height: 10%;
+	min-height: 60px;
+	/*float: right;*/
+}
+
+#topBar button {
+	background-color: #3c6426;
+	border: 0;
+	outline: none;
+	height: 100%;
+	width: 100px;
+	min-width: 100px;
+	display: inline-block;
+	float: right;
+}
+
+#topBar button:hover {
+	background-color: #4c7d2f;
+	border: 0;
+	outline: none;
+}
+
+#topBar button:active {
+	background-color: #4c7d2f;
+	border: 0;
+	outline: none;
+	transform: scale(1.05, 1.05);
+}
+
+#topBar input {
+	width: 80px;
+	height: 40px;
+	margin-bottom: 40px;
+	text-align: center;
+	border: 0;
+	outline: none;
+	display: inline-block;
+	float: right;
+	margin-top: 25px;
+	margin-bottom: 0;
+	margin-right: 25px;
+	transition: all .5s ease;
+}
+
+#topBar input:focus {
+	width: 280px;
+}
+
+#dataContainer {
+	/*background-color: black;*/
+	height: 100%;
+	width: 100%;
+}
+
+#catalogsContainer {
+	background-color: #6db645;
+	/*display: inline-block;*/
+	width: 30%;
+	height: 100%;
+	resize: horizontal;
+	float: left;
+}
+
+#recordsContainer {
+	background-color: yellow;
+	/*display: inline-block;*/
+	/*resize: horizontal;*/
+	width: 70%;
+	height: 100%;
+	float: right;
+}
+
+#recordsListContainer {
+	background-color: #e0ffcd;
+	/*display: inline-block;*/
+	/*resize: horizontal;*/
+	width: 100%;
+	height: 60%;
+	/*float: right;*/
+	overflow: auto;
+}
+
+#recordsList {
+	margin: 10px;
+}
+
+#recordDetailsContainer {
+	background-color: #e0ffcd;
+	/*display: inline-block;*/
+	resize: horizontal;
+	width: 100%;
+	height: 40%;
+	/*float: right;*/
+	border-color: black;
+	border-width: 1px;
+	border-top: solid; 
+}
+
+#recordDetails {
+	margin: 10px;
+}
+
+#exitOverlay {
+	visibility: hidden;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width:100%;
+	height:100%;
+	text-align:center;
+	z-index: 1000;
+	background-color: rgba(0,0,0,0.7);
+}
+
+#exitOverlayForm {
+	width:300px;
+	margin: 200px auto;
+	background-color: #fff;
+	border:1px solid #000;
+	padding:15px;
+	text-align:center;
+}
+
+#exitOverlayText {
+	margin: 20px;
+}
+
+#exitOverlayButtons {
+
+}
+
+#recordOverlay {
+	visibility: hidden;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width:100%;
+	height:100%;
+	text-align:center;
+	z-index: 1000;
+	background-color: rgba(0,0,0,0.7);
+}
+
+#recordOverlayForm {
+	width: 400px;
+	height: 600px;
+	margin: 200px auto;
+	padding: 15px;
+	background-color: white;
+}
+
+#recordOverlayData {
+
+}
+
+#catalogsTree {
+	height: 780px;
+}
+
+#timeDiv {
+	height: 40px;
+}
+
+#timeHolder{
+	display: block;
+	margin: 10px auto;
+	text-align: center;
+}
