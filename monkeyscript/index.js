@@ -3,7 +3,7 @@ function login() {
 	var password = document.loginForm.password.value;
 
 	var xhr = new XMLHttpRequest();
-	xhr.open("POST", "/auth", true);
+	xhr.open("POST", "/api/1.0/auth", true);
 	xhr.setRequestHeader("Content-Type", "application/json");	
 	xhr.onload = function () {
 		var response = JSON.parse(xhr.response);
