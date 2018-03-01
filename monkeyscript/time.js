@@ -6,7 +6,7 @@ function nicify(unit) {
 	return unit;
 }
 
-function getTime() {
+function getTime() { //need to rewrite this shit
 	var cookies = document.cookie.split(";");
 	for (var cookie in cookies) {
 		if (cookies[cookie].indexOf("_tt_expTime") > -1) {

@@ -50,6 +50,14 @@ form {
 	outline: none;
 }
 
+#inputs button:disabled:hover {
+	width: 280px;
+	height: 40px;
+	background-color: #3c6426;
+	border: 0;
+	outline: none;
+}
+
 #inputs button:hover {
 	width: 280px;
 	height: 40px;

@@ -1,7 +1,28 @@
 window.onload = function () {
-	setInterval(showTime, 1);
-	getRecords();
+	var xhr = new XMLHttpRequest();
+	xhr.open("GET", "/api/1.0/checkJWT", true);
+	xhr.onload = function () {
+		var response = JSON.parse(xhr.response);
+		if (response.result == "JWT is valid") {
+			setInterval(showTime, 1);
+			// getRecords();
+			buildTree();
+		} else {
+			document.body.innerHTML = ""; //need replace with showing popup message and redirecting to index page 
+		}
+	}	
+	xhr.send();
 };
+
+// window.onload = function () {
+// 	if (isCookieValid() == true) {
+// 		setInterval(showTime, 1);
+// 		getRecords();
+// 	} else {
+// 		document.body.innerHTML = "";
+// 	}
+// 	// console.log(isCookieValid());
+// };
 
 function getCookie() {
 	return document.cookie.split(";").filter(function (cookie) { cookie.indexOf("_tt") > -1 ? cookie : false });
@@ -14,16 +35,35 @@ function exit() {
 	}
 }
 
+// need to add cookie validation function for preventing access to someStuff page 
+
+// function isCookieValid() {
+// 	var xhrOther = new XMLHttpRequest();
+// 	xhrOther.open("GET", "/api/1.0/checkJWT", true);
+// 	xhrOther.onload = function () {
+// 		console.log(xhrOther.response);
+// 		var response = JSON.parse(xhrOther.response);
+// 		if (response.result == "JWT is valid") {
+// 			return true;
+// 		} else {
+// 			return false;
+// 		}
+// 	}	
+// 	xhrOther.send();
+// }
+
 function noAskExit() {
 	document.cookie = "_tt=; expires=-1;";
+	document.cookie = "_tt_expTime=; expires=-1;";
 	var xhr = new XMLHttpRequest();
 	xhr.open("GET", "/", true);
 	xhr.setRequestHeader("Pragma", "no-cache");
 	xhr.setRequestHeader("Expires", "-1");
 	xhr.setRequestHeader("Cache-Control", "no-cache");
 	xhr.onload = function () {
-		document.location.reload(false);
-		window.close();
+		// document.location.reload(false);
+		// window.close();
+		window.location = "/";
 	}
 	xhr.send();
 }
@@ -37,73 +77,93 @@ function noAskExit() {
 // 	var xhr = new XMLHttpRequest();
 // 	xhr.open("GET", "/api/1.0/show/record/" + recordId, true);
 // 	xhr.onload = function () {
-// 		return response = JSON.parse(xhr.response);
+// 		buildList(JSON.parse(xhr.response));
 // 	}		
 // 	xhr.send();
 // }
 
-function getRecords() {
+function getRecordsFromCatalog(catalogId) {
 	var xhr = new XMLHttpRequest();
-	xhr.open("GET", "/api/1.0/show/record/all", true);
+	xhr.open("GET", "/api/1.0/show/records/fromCatalog/" + catalogId, true);
+
 	xhr.onload = function () {
 		buildList(JSON.parse(xhr.response)); 
 	}		
 	xhr.send();
 }
 
+function buildTree() {
+	var xhr = new XMLHttpRequest();
+	xhr.open("GET", "/api/1.0/show/catalog/all", true);
+	xhr.onload = function() {
+		var response = JSON.parse(xhr.response);
+		var catalogs = response.catalogs;
+		var rootCatalog;
+
+		for (var catalog in catalogs) {
+			if (catalogs[catalog].name == "rootCatalog") {
+				rootCatalog = catalogs[catalog];
+			}
+		}
+
+		var catalogsTree = document.getElementById('catalogsTree');
+		// catalogsTree.oncontextmenu = function() {
+		// 	showCatalogHolderContextMenu(event);
+		// }
+		var treeRoot = document.createElement("ul");
+		treeRoot.setAttribute("id", "treeRoot");
+		// treeRoot.setAttribute("class", "collapsed");
+		// treeRoot.innerHTML = "+";
+		catalogsTree.appendChild(treeRoot);
+
+		var childCatalogsOids = rootCatalog.catalogs;
+		var xhrs = [];
+
+		for (var i = 0; i <= childCatalogsOids.length - 1; i++) {
+			(function (i){
+                xhrs[i] = new XMLHttpRequest();
+                xhrs[i].open("GET", "/api/1.0/show/catalog/" + childCatalogsOids[i].$oid, true);
+                xhrs[i].onload = function () {	
+	            	var catalog = JSON.parse(xhrs[i].response);
+					if (catalog.catalogs.length == 0) {
+						var treeLeaf = document.createElement("li");
+						treeLeaf.setAttribute("class", "treeLeaf");
+						treeLeaf.setAttribute("state", "collapsed");
+						treeLeaf.setAttribute("hasChild", "no");
+						treeLeaf.setAttribute("catalogId", catalog._id.$oid);
+						treeLeaf.innerHTML = catalog.name;
+						treeRoot.appendChild(treeLeaf);
+						treeLeaf.onclick = function() {
+							getRecordsFromCatalog(catalog._id.$oid);
+						};
+						treeLeaf.oncontextmenu = function() {
+							showCatalogContextMenu(event);
+ 						};
+                };}
+                xhrs[i].send();
+            })(i);
+        }
+	}
+	xhr.send();
+}
+
 function buildList(response) {
-	var listHolder = document.getElementById('recordsList');
-	listHolder.innerHTML = "";
 	var records = response;
 
-	var table = document.createElement("table");
-	listHolder.appendChild(table);
-	var tableRow = document.createElement("tr");
-	// table.setAttribute("border", "1");
-	table.appendChild(tableRow);
-	// var tableHeaderId = document.createElement("th");
-	// tableHeaderId.innerHTML = "ID";
-	var tableHeaderRecordName = document.createElement("th");
-	// tableHeaderRecordName.style.width = "50px";
-	tableHeaderRecordName.innerHTML = "Name";
-	// var tableHeaderServerAddress = document.createElement("th");
-	// tableHeaderServerAddress.innerHTML = "Address";
-	var tableHeaderUsername = document.createElement("th");
-	tableHeaderUsername.innerHTML = "Username";
-	var tableHeaderPassword = document.createElement("th");
-	tableHeaderPassword.innerHTML = "Password";
-	var tableHeaderAction = document.createElement("th");
-	tableHeaderAction.innerHTML = "Action";
-	// tableHeaderAction.style.width = "100px";
-	// var tableHeaderURL = document.createElement("th");
-	// tableHeaderURL.innerHTML = "URL";
-	// var tableHeaderNotes = document.createElement("th");
-	// tableHeaderNotes.innerHTML = "Notes";
-	// tableRow.appendChild(tableHeaderId);
-	tableRow.setAttribute("border", "1");
-	tableRow.appendChild(tableHeaderRecordName);
-	// tableRow.appendChild(tableHeaderServerAddress);
-	tableRow.appendChild(tableHeaderUsername);
-	tableRow.appendChild(tableHeaderPassword);
-	tableRow.appendChild(tableHeaderAction);
-	// tableRow.appendChild(tableHeaderURL);
-	// tableRow.appendChild(tableHeaderNotes);
-
-	for (var item in records.records) {
-		var record = records.records[item];
-		// console.log(record);
+	var table = document.getElementById("recordsTable");
+	table.innerHTML = "<tbody><tr><th>Name</th><th>Username</th><th>Password</th><th>Action</th></tr></tbody>";
+	for (var item in records) {
+		var record = records[item];
 		var tableRow = document.createElement("tr");
 		tableRow.setAttribute("id", "recordRow");
 		tableRow.setAttribute("class", "recordRow");
-		tableRow.setAttribute("record_id", record._id.$oid);
+		tableRow.setAttribute("align", "center");
+		tableRow.setAttribute("recordId", record._id.$oid);
+
 		table.appendChild(tableRow);
-		// var tableHeaderId = document.createElement("td");
-		// tableHeaderId.innerHTML = record._id.$oid;
 		var tableDataRecordName = document.createElement("td");
 		tableDataRecordName.setAttribute("id", "recordNameInRow");
 		tableDataRecordName.innerHTML = record.name;
-		// var tableHeaderServerAddress = document.createElement("td");
-		// tableHeaderServerAddress.innerHTML = record.serverAddress;
 		var tableDataUsername = document.createElement("td");
 		tableDataUsername.setAttribute("id", "usernameInRow");
 		tableDataUsername.innerHTML = record.username;
@@ -122,46 +182,35 @@ function buildList(response) {
 		tableDataAction.appendChild(tableDataActionEdit);
 		tableDataAction.appendChild(tableDataActionDelete);
 		
-		// var tableDataURL = document.createElement("td");
-		// tableDataURL.setAttribute("id", "url");
-		// tableDataURL.innerHTML = record.url;
-		// var tableHeaderNotes = document.createElement("td");
-		// tableHeaderNotes.innerHTML = record.notes;
-		// tableRow.appendChild(tableHeaderId);
 		tableRow.appendChild(tableDataRecordName);
-		// tableRow.appendChild(tableHeaderServerAddress);
 		tableRow.appendChild(tableDataUsername);
 		tableRow.appendChild(tableDataPassword);
 		tableRow.appendChild(tableDataAction);
-		// tableRow.appendChild(tableHeaderURL);
-		// tableRow.appendChild(tableHeaderNotes);
-		// listHolder.append("<tr><td>" + record._id.$oid + "</td><td>" + record.name + "</td><td>" + record.serverAddress + "</td><td>" + record.username + "</td>\
-		// <td>" + record.password + "</td><td>" + record.url + "</td><td>" + record.notes + "</td></tr>");
-		tableDataRecordName.onclick = function () {
+
+		tableDataRecordName.onclick = function() {
 			var record = this.parentNode;
 			var recordDetails = document.getElementById("recordDetails");
-			displayRecord(recordDetails, record.getAttribute("record_id"));
+			displayRecord(recordDetails, record.getAttribute("recordId"));
 		};
-		tableDataActionEdit.onclick = function () {
+		tableDataActionEdit.onclick = function() {
 			var record = this.parentNode.parentNode;
-			var recordId = record.getAttribute("record_id");
+			var recordId = record.getAttribute("recordId");
 			showEditRecordForm(recordId);
 		};
-		tableDataActionDelete.onclick = function () {
+		tableDataActionDelete.onclick = function() {
 			var record = this.parentNode.parentNode;
-			var recordId = record.getAttribute("record_id");
+			var recordId = record.getAttribute("recordId");
 			var result = confirm("rlly?");
 			result == true ? deleteRecord(recordId) : false;
-			// deleteRecord(recordId);
 		};
 	}
 }
 
 function displayRecord(recordHolder, recordId) {
-	var xhr = new XMLHttpRequest();
-	xhr.open("GET", "/api/1.0/show/record/" + recordId, true);
-	xhr.onload = function () {
-		var response = JSON.parse(xhr.response);
+	var xhrDisplayRecord = new XMLHttpRequest();
+	xhrDisplayRecord.open("GET", "/api/1.0/show/record/" + recordId, true);
+	xhrDisplayRecord.onload = function () {
+		var response = JSON.parse(xhrDisplayRecord.response);
 
 		recordHolder.innerHTML = "";
 
@@ -205,7 +254,7 @@ function displayRecord(recordHolder, recordId) {
 		recordHolder.appendChild(creationDate);
 		recordHolder.appendChild(modificationDate);
 	}		
-	xhr.send();
+	xhrDisplayRecord.send();
 }
 
 function addRecord() {
@@ -216,18 +265,18 @@ function addRecord() {
 	var url = document.getElementById("recordURLInForm");
 	var notes = document.getElementById("recordNotesInForm");
 
-	var xhr = new XMLHttpRequest();
-	xhr.open("POST", "/api/1.0/add/record", true);
-	xhr.setRequestHeader("Content-Type", "application/json");
-	xhr.onload = function () {
-		if (JSON.parse(xhr.response).result == "success") {
+	var xhrAddRecord = new XMLHttpRequest();
+	xhrAddRecord.open("POST", "/api/1.0/add/record", true);
+	xhrAddRecord.setRequestHeader("Content-Type", "application/json");
+	xhrAddRecord.onload = function () {
+		if (JSON.parse(xhrAddRecord.response).result == "success") {
 			getRecords();
 		} else {
 			alert("srsly?");
 		}
 		
 	}		
-	xhr.send(JSON.stringify({
+	xhrAddRecord.send(JSON.stringify({
 		'recordName': recordName.value, 
 		'serverAddress': serverAddress.value, 
 		'username': username.value, 
@@ -248,7 +297,7 @@ function addRecord() {
 }
 
 function editRecord(recordId) {
-	console.log(recordId);
+	// console.log(recordId);
 	var recordName = document.getElementById("recordNameInForm");
 	var serverAddress = document.getElementById("recordServerAddressInForm");
 	var username = document.getElementById("recordUsernameInForm");
@@ -256,18 +305,18 @@ function editRecord(recordId) {
 	var url = document.getElementById("recordURLInForm");
 	var notes = document.getElementById("recordNotesInForm");
 
-	var xhr = new XMLHttpRequest();
-	xhr.open("POST", "/api/1.0/update/record", true);
-	xhr.setRequestHeader("Content-Type", "application/json");
+	var xhrEditRecord = new XMLHttpRequest();
+	xhrEditRecord.open("POST", "/api/1.0/update/record", true);
+	xhrEditRecord.setRequestHeader("Content-Type", "application/json");
 	xhr.onload = function () {
-		if (JSON.parse(xhr.response).result == "success") {
+		if (JSON.parse(xhrEditRecord.response).result == "success") {
 			getRecords();
 		} else {
-			alert(JSON.parse(xhr.response).result);
+			alert(JSON.parse(xhrEditRecord.response).result);
 		}
 		
 	}		
-	xhr.send(JSON.stringify({
+	xhrEditRecord.send(JSON.stringify({
 		'recordId': recordId,
 		'recordName': recordName.value, 
 		'serverAddress': serverAddress.value, 
@@ -290,14 +339,23 @@ function editRecord(recordId) {
 }
 
 function deleteRecord(recordId) {
-	var xhr = new XMLHttpRequest();
-	xhr.open("GET", "/api/1.0/delete/record/" + recordId, true);
-	xhr.onload = function () {
-		if (JSON.parse(xhr.response).result == "success") {
-			getRecords();
+	var catalogId;
+
+	var xhrGetCatalog = new XMLHttpRequest();
+	xhrGetCatalog.open("GET", "/api/1.0/show/catalog/byRecordId/" + recordId, true);
+	xhrGetCatalog.onload = function() {
+		catalogId = JSON.parse(xhrGetCatalog.response)._id.$oid;
+	}
+	xhrGetCatalog.send();
+
+	var  xhrDeleteRecord = new XMLHttpRequest();
+	xhrDeleteRecord.open("GET", "/api/1.0/delete/record/" + recordId, true);
+	xhrDeleteRecord.onload = function () {
+		if (JSON.parse(xhrDeleteRecord.response).result == "success") {
+			getRecordsFromCatalog(catalogId);
 		} else {
 			alert("srsly?");
 		}
 	}		
-	xhr.send();
+	xhrDeleteRecord.send();
 }

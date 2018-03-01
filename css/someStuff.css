@@ -74,7 +74,7 @@ th {
 	background-color: #6db645;
 	width: 100%;
 	height: 10%;
-	min-height: 60px;
+	min-height: 90px;
 	/*float: right;*/
 }
 
@@ -123,7 +123,7 @@ th {
 
 #dataContainer {
 	/*background-color: black;*/
-	height: 100%;
+	height: 90%;
 	width: 100%;
 }
 
@@ -164,7 +164,7 @@ th {
 	/*display: inline-block;*/
 	resize: horizontal;
 	width: 100%;
-	height: 40%;
+	height: 39.6%;
 	/*float: right;*/
 	border-color: black;
 	border-width: 1px;
@@ -229,7 +229,10 @@ th {
 }
 
 #catalogsTree {
-	height: 780px;
+	height: 95%;
+	margin: 0 0 0 0;
+	width: 100%;
+	overflow: auto;
 }
 
 #timeDiv {
@@ -240,4 +243,43 @@ th {
 	display: block;
 	margin: 10px auto;
 	text-align: center;
+}
+
+li:hover {
+	cursor: pointer;
+}
+
+.contextMenu {
+	/*display: none;*/
+	position: fixed;
+	border: 1px solid black;
+	width: 150px;
+	/*box-shadow: 0 0 75px 15px rgba(0,0,0,0.7);*/
+	visibility: hidden;
+	background-color: #e0ffcd; 
+}
+
+#menuItem:hover {
+	color: white;
+	background-color: black;
+}
+
+#uploadOverlay {
+	visibility: hidden;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width:100%;
+	height:100%;
+	text-align:center;
+	z-index: 1000;
+	background-color: rgba(0,0,0,0.7);
+}
+
+#uploadOverlayForm {
+	width: 400px;
+	height: 400px;
+	margin: 200px auto;
+	padding: 15px;
+	background-color: white;
 }

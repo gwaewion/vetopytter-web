@@ -6,14 +6,18 @@
 			<script type="text/javascript" src="monkeyscript/someStuff.js"></script>
 			<script type="text/javascript" src="monkeyscript/overlay.js"></script>
 			<script type="text/javascript" src="monkeyscript/search.js"></script>
+			<script type="text/javascript" src="monkeyscript/test.js"></script>
 			<title>someStuff</title>
 	</head>
 	<body>
+
 		<div id="mainContainer">
 			<div id="topBar">
 				<button type="button" onclick="showExitDialog();">gtfo</button>
 				<button type="button" onclick="">settingz</button>
-				<button type="button" onclick="showAddRecordForm();">+</button>
+				<button type="button" onclick="showAddRecordForm();">+r</button>
+				<button type="button" onclick="showAddCatalogForm();">+c</button>
+				<button type="button" onclick="showImportForm();">imprtKPss</button>
 				<input placeholder="search" type="text" name="search" onkeypress="search();"></input>
 			</div>
 			<div id="dataContainer">
@@ -21,6 +25,7 @@
 					<div id="catalogsTree">
 
 					</div>
+					
 					<div id="timeDiv">
 						<span id="timeHolder">Time: <span id="time"></span></span>
 					</div>
@@ -28,7 +33,12 @@
 				<div id="recordsContainer">
 					<div id="recordsListContainer">
 				 		<div id="recordsList">
-				 			
+				 			<table id="recordsTable" border="0" cellpadding="17">
+				 				<th>Name</th>
+				 				<th>Username</th>
+				 				<th>Password</th>
+				 				<th>Action</th>
+				 			</table>
 						</div>
 					</div>
 					<div id="recordDetailsContainer">
@@ -63,6 +73,25 @@
 					<button type="button" onclick="showAddRecordForm();">close, blyad'</button>
 				<!-- </div> -->
 			</div>
+		</div>
+		<div id="uploadOverlay">
+			<div id="uploadOverlayForm">
+				<input type="file" id="fileChooser" accept="text/xml, application/xml">
+				<button type="button" onclick="uploadFile();">snd</button>
+			</div>
+		</div>
+		<div id="catalogContextMenu" class="contextMenu">
+			<ul class="menuItems">
+				<li class="menuItem" id="makeCatalogMenuItem">mk cat</li>
+				<li class="menuItem" id="removeCatalogMenuItem">rm cat</li>
+				<!-- <li class="menuItem" id="makeCatalogMenuItem">cp cat</li>
+				<li class="menuItem" id="makeCatalogMenuItem">insrt cat</li> -->
+			</ul>
+		</div>
+		<div id="catalogHolderContextMenu" class="contextMenu">
+			<ul id="menuItems">
+				<li id="menuItem">mk cat</li>
+			</ul>
 		</div>
 	</body>
 </html>

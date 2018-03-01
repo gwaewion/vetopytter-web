@@ -43,8 +43,14 @@ function showEditRecordForm(recordId) {
 		notes.value = response.notes;
 
 		var submitButton = document.getElementById("recordFormSubmit");
-		submitButton.onclick = function () {editRecord(recordId)};
+		submitButton.onclick = function () {
+			editRecord(recordId);
+			if (document.getElementById("recordDetails").innerHTML != "") {
+				displayRecord(document.getElementById("recordDetails"), recordId);
+			}
+		};
 		overlay.style.visibility = "visible";
 	}		
 	xhr.send();
 }
+
